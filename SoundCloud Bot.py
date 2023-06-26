@@ -6,7 +6,7 @@ from tkinter import ttk
 import tkinter.messagebox as MessageBox
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, WebDriverException, NoSuchWindowException, InvalidSessionIdException, ElementClickInterceptedException, Ma
+from selenium.common.exceptions import NoSuchElementException, WebDriverException, NoSuchWindowException, InvalidSessionIdException, ElementClickInterceptedException
 import threading
 from sys import platform
 from selenium.webdriver.firefox.options import Options
