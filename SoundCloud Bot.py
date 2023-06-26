@@ -30,8 +30,9 @@ class SoundCloudBot(Tk):
     def __init__(self):
         super().__init__()
 
-        
+        # Application Title
         self.title("SoundCloud Bot v{}".format(appVersion))
+        # Set window size
         self.geometry('700x510')
 
         # Create drop menu options list
@@ -71,17 +72,21 @@ class SoundCloudBot(Tk):
         
     def createSongList(self):
 
+        # Open the CSV file
         with open(SoundCloudCsvPath,'r',encoding='utf-8-sig') as songCsv:
+            # Reader created to get information from open CSV
             csvReader = csv.reader(songCsv,delimiter=',')
+            # For each line in the reader, for each song in the line append it to the song list
             for line in csvReader:
                 for song in line:
                     songList.append(song)
                     reverseList.append(song)
-        
+        # Reverse list so that when the final song is met, the File Counter is increased
         reverseList.reverse()
 
     def makesoundCloudThread(self):
 
+        # Creating a thread for the bot so the UI does not freeze when running
         for i in range(1):
 
             self.scThread = threading.Thread(target=self.startSCBot)
@@ -104,12 +109,12 @@ class SoundCloudBot(Tk):
             browser = webdriver.Firefox()
         # Check if Windows
         elif platform == "win32":
-
+            # Set the gecko driver path
             driverPath = currentPath +"\geckodriver.exe"
-
+            # Create a configuration to find the installation path for FireFox
             ffOptions = Options()
             ffOptions.binary_location = r'C:\Program Files\Mozilla Firefox\firefox.exe'
-
+            # Open browser with the configuration
             browser = webdriver.Firefox(executable_path=driverPath,options=ffOptions)
 
         #loop file count
@@ -137,16 +142,19 @@ class SoundCloudBot(Tk):
                     # Find play button and click it
                     playButton = browser.find_element(By.XPATH, '/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[1]/a')
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Click play button
                     playButton.click()
                     
+                    # Wait for page to load
                     time.sleep(2)
                     
                     # Get updated play count
                     playCount = browser.find_element(By.XPATH, '//*[@id="content"]/div/div[3]/div[1]/div/div[1]/div/div/div[2]/ul/li[1]/span/span[2]').get_attribute("innerHTML")
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Log song and play count
@@ -166,26 +174,27 @@ class SoundCloudBot(Tk):
                         fileCount += 1
                     # End the loop if loop count has been met
                     if fileCount == int(self.listRepeatCounterCombo.get()):
-                        print("File Count and Song Count Met")
+                        # Close the browser, the repeat limit has been met
                         browser.quit()                          
 
                 except ElementClickInterceptedException:
 
                     # Failed to click on play button because a Ad needs to play
-                    
                     self.outputBox.insert(END,"An Advertisement is playing, waiting for ad \n")
 
                     # Get the ad play button and click it
                     adButton = browser.find_element(By.XPATH, "/html/body/div[1]/div[4]/section/div/div[3]/button[2]")
                     adButton.click()
 
+                    # Wait fot the Ad to play
                     time.sleep(35)
 
-                    # Ad has played, try to play the song again
+                    # Ad has played, song will now automatically play
     
                     # Get updated play count
                     playCount = browser.find_element(By.XPATH, '//*[@id="content"]/div/div[3]/div[1]/div/div[1]/div/div/div[2]/ul/li[1]/span/span[2]').get_attribute("innerHTML")
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Log song and play count
@@ -201,15 +210,19 @@ class SoundCloudBot(Tk):
                     time.sleep(60)
 
                 except NoSuchWindowException:
+                    # Browser window has been closed, exit bot loop
                     self.outputBox.insert(END,"Browser Window Has Been Closed. Ending Bot. \n ")
                     return
                 
                 except InvalidSessionIdException:
+                    # Browser being closed can also prompt an Invalid Session instead of missing window
                     self.outputBox.insert(END,"Browser Window Has Been Closed. Ending Bot. \n ")
                     return
                 
                 except NoSuchElementException:
 
+                    # This exception is to catch if the element cannot be located, either the page didnt load fast enough or the internet connection has been lost.
+
                     # Open Song Address
                     browser.get(song)
 
@@ -222,16 +235,19 @@ class SoundCloudBot(Tk):
                     # Find play button and click it
                     playButton = browser.find_element(By.XPATH, '/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[1]/a')
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Click play button
                     playButton.click()
                     
+                    # Wait for page to load
                     time.sleep(2)
                     
                     # Get updated play count
                     playCount = browser.find_element(By.XPATH, '//*[@id="content"]/div/div[3]/div[1]/div/div[1]/div/div/div[2]/ul/li[1]/span/span[2]').get_attribute("innerHTML")
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Log song and play count
@@ -252,12 +268,14 @@ class SoundCloudBot(Tk):
                         fileCount += 1
                     # End the loop if loop count has been met
                     if fileCount == int(self.listRepeatCounterCombo.get()):
-                        print("File Count and Song Count Met")
+                        # Close the browser, the repeat limit has been met
                         browser.quit()  
 
 
                 except WebDriverException:
 
+                    # This exception is to catch if the driver fails to load the page and get information from it, either the page didnt load fast enough or the internet connection has been lost.
+
                     # Open Song Address
                     browser.get(song)
 
@@ -270,16 +288,19 @@ class SoundCloudBot(Tk):
                     # Find play button and click it
                     playButton = browser.find_element(By.XPATH, '/html/body/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div[2]/div/div/div[1]/a')
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Click play button
                     playButton.click()
                     
+                    # Wait for page to load
                     time.sleep(2)
                     
                     # Get updated play count
                     playCount = browser.find_element(By.XPATH, '//*[@id="content"]/div/div[3]/div[1]/div/div[1]/div/div/div[2]/ul/li[1]/span/span[2]').get_attribute("innerHTML")
                     
+                    # Wait for page to load
                     time.sleep(2)
 
                     # Log song and play count
@@ -300,13 +321,13 @@ class SoundCloudBot(Tk):
                         fileCount += 1
                     # End the loop if loop count has been met
                     if fileCount == int(self.listRepeatCounterCombo.get()):
-                        print("File Count and Song Count Met")
+                        # Close the browser, the repeat limit has been met
                         browser.quit()      
 
         # Reset File Counter
         fileCount = 0
           
-
+# If this script was loaded as the main app, create a instance of the bot and start the main loop
 if __name__ == '__main__':
     app = SoundCloudBot()
     app.mainloop()
